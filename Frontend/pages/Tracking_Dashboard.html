@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrackCore — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0f14;
+      --bg2: #111620;
+      --bg3: #161c28;
+      --panel: #1a2133;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #e8edf5;
+      --text2: #8892a4;
+      --text3: #525f75;
+      --accent: #1A73E8;
+      --accent-glow: rgba(26,115,232,0.15);
+      --accent2: #2C5282;
+      --accent3: #1F3A5F;
+      --accent4: #ef4444;
+      --accent5: #1A73E8;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; fill: white; }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .logo-text span { color: var(--accent); }
+
+    .sidebar-nav { flex: 1; padding: 16px 12px; }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding: 0 8px 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 400;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { background: var(--accent-glow); color: var(--accent); }
+
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent4);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .user-card:hover { background: rgba(255,255,255,0.04); }
+
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent5));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600;
+      color: white; flex-shrink: 0;
+    }
+
+    .user-info p { font-size: 13px; font-weight: 500; line-height: 1.2; }
+    .user-info span { font-size: 11px; color: var(--text3); }
+
+
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 64px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      position: sticky; top: 0; z-index: 40;
+    }
+
+    .topbar-title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .topbar-sub {
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .topbar-sep { flex: 1; }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      width: 220px;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus-within { border-color: var(--accent); }
+    .search-box svg { width: 14px; height: 14px; color: var(--text3); flex-shrink: 0; }
+    .search-box input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-size: 13px; font-family: var(--font);
+      width: 100%;
+    }
+    .search-box input::placeholder { color: var(--text3); }
+
+    .topbar-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .topbar-btn:hover { border-color: var(--border2); background: var(--panel); }
+    .topbar-btn svg { width: 16px; height: 16px; color: var(--text2); }
+
+    .notif-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent4);
+      border: 2px solid var(--bg2);
+    }
+
+
+    .content { padding: 28px; flex: 1; }
+
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+      cursor: default;
+    }
+    .kpi-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 12px 12px 0 0;
+    }
+    .kpi-card.blue::before  { background: var(--accent); }
+    .kpi-card.green::before { background: var(--accent2); }
+    .kpi-card.amber::before { background: var(--accent3); }
+    .kpi-card.red::before   { background: var(--accent4); }
+
+    .kpi-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .kpi-icon.blue  { background: rgba(59,130,246,0.15); }
+    .kpi-icon.green { background: rgba(16,185,129,0.15); }
+    .kpi-icon.amber { background: rgba(245,158,11,0.15); }
+    .kpi-icon.red   { background: rgba(239,68,68,0.15); }
+    .kpi-icon svg   { width: 20px; height: 20px; }
+    .kpi-icon.blue  svg { color: var(--accent); }
+    .kpi-icon.green svg { color: var(--accent2); }
+    .kpi-icon.amber svg { color: var(--accent3); }
+    .kpi-icon.red   svg { color: var(--accent4); }
+
+    .kpi-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; font-weight: 500; letter-spacing: 0.02em; }
+    .kpi-value { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; font-family: var(--mono); }
+    .kpi-delta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 500;
+      padding: 3px 7px; border-radius: 20px;
+    }
+    .kpi-delta.up   { background: rgba(16,185,129,0.12); color: var(--accent2); }
+    .kpi-delta.down { background: rgba(239,68,68,0.12); color: var(--accent4); }
+    .kpi-delta svg  { width: 10px; height: 10px; }
+
+
+    .mid-row {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title { font-size: 14px; font-weight: 500; }
+    .panel-sub   { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    .panel-action {
+      font-size: 12px;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: var(--accent-glow);
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .panel-action:hover { background: rgba(59,130,246,0.22); }
+
+
+    .chart-wrap { padding: 20px; }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 140px;
+      margin-bottom: 10px;
+    }
+
+    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+    .bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: var(--accent);
+      opacity: 0.75;
+      transition: opacity 0.2s, transform 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .bar:hover { opacity: 1; transform: scaleY(1.03); transform-origin: bottom; }
+    .bar.green { background: var(--accent2); }
+    .bar-label { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+    .chart-legend {
+      display: flex; gap: 16px; margin-top: 6px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+
+    .map-panel { padding: 0; }
+
+    .map-wrap {
+      height: 240px;
+      background: var(--bg3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .map-ping {
+      position: absolute;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+    .map-ping::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      opacity: 0.4;
+      animation: ripple 2s ease-out infinite;
+    }
+    @keyframes ripple {
+      0%   { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .ping-blue   { background: var(--accent);  color: var(--accent);  }
+    .ping-green  { background: var(--accent2); color: var(--accent2); }
+    .ping-amber  { background: var(--accent3); color: var(--accent3); }
+    .ping-red    { background: var(--accent4); color: var(--accent4); }
+
+    .ping-tooltip {
+      position: absolute;
+      bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: 10px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .map-ping:hover .ping-tooltip { opacity: 1; }
+
+
+    .bot-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+
+    .table-wrap { overflow: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+      cursor: pointer;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td { padding: 11px 20px; color: var(--text2); }
+    tbody td:first-child { color: var(--text); font-weight: 500; font-family: var(--mono); font-size: 12px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .status-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+
+    .pill-active  { background: rgba(16,185,129,0.1);  color: var(--accent2); }
+    .pill-active::before  { background: var(--accent2); }
+    .pill-idle    { background: rgba(245,158,11,0.1);  color: var(--accent3); }
+    .pill-idle::before    { background: var(--accent3); }
+    .pill-offline { background: rgba(239,68,68,0.1);   color: var(--accent4); }
+    .pill-offline::before { background: var(--accent4); }
+    .pill-transit { background: rgba(59,130,246,0.1);  color: var(--accent); }
+    .pill-transit::before { background: var(--accent); }
+
+    /* ─── ACTIVITY FEED ──────────────────────────────── */
+    .feed { padding: 0 20px; }
+
+    .feed-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feed-item:last-child { border-bottom: none; }
+
+    .feed-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .feed-body { flex: 1; }
+    .feed-body p { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+    .feed-body p span { color: var(--accent); font-weight: 500; }
+    .feed-time { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="logo-text">Track<span>Core</span></div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Live Map
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Assets
+      <span class="nav-badge">248</span>
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8l4 3-4 3V8zM1 21l4-5M7 21l4-5M13 21l-2-5"/></svg>
+      Deliveries
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Users
+    </div>
+
+    <div class="nav-label">Analytics</div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reports
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Analytics
+    </div>
+
+    <div class="nav-label">System</div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Alerts
+      <span class="nav-badge">3</span>
+    </div>
+
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">AR</div>
+      <div class="user-info">
+        <p>Ahmad Razif</p>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+<main class="main">
+
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-sub">Monday, 16 March 2026</div>
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search assets, IDs…" />
+    </div>
+    <div class="topbar-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot"></span>
+    </div>
+    <div class="topbar-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+  </header>
+
+  <div class="content">
+
+
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kpi-label">Total Assets Tracked</div>
+        <div class="kpi-value">2,481</div>
+        <span class="kpi-delta up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +12.4% this week
+        </span>
+      </div>
+
+      <div class="kpi-card green">
+        <div class="kpi-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="kpi-label">Active Deliveries</div>
+        <div class="kpi-value">184</div>
+        <span class="kpi-delta up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +8.1% vs yesterday
+        </span>
+      </div>
+
+      <div class="kpi-card amber">
+        <div class="kpi-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="kpi-label">Avg. Delivery Time</div>
+        <div class="kpi-value">3.2h</div>
+        <span class="kpi-delta down">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          +0.4h from target
+        </span>
+      </div>
+
+      <div class="kpi-card red">
+        <div class="kpi-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="kpi-label">Active Alerts</div>
+        <div class="kpi-value">3</div>
+        <span class="kpi-delta down">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          2 critical, 1 warning
+        </span>
+      </div>
+    </div>
+
+
+    <div class="mid-row">
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Tracking Activity</div>
+            <div class="panel-sub">Deliveries completed vs in transit — last 7 days</div>
+          </div>
+          <div class="panel-action">Export</div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-bars">
+            <div class="bar-col"><div class="bar" style="height:62%"></div><div class="bar green" style="height:40%"></div><div class="bar-label">Mon</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%"></div><div class="bar green" style="height:55%"></div><div class="bar-label">Tue</div></div>
+            <div class="bar-col"><div class="bar" style="height:54%"></div><div class="bar green" style="height:38%"></div><div class="bar-label">Wed</div></div>
+            <div class="bar-col"><div class="bar" style="height:92%"></div><div class="bar green" style="height:70%"></div><div class="bar-label">Thu</div></div>
+            <div class="bar-col"><div class="bar" style="height:74%"></div><div class="bar green" style="height:60%"></div><div class="bar-label">Fri</div></div>
+            <div class="bar-col"><div class="bar" style="height:48%"></div><div class="bar green" style="height:30%"></div><div class="bar-label">Sat</div></div>
+            <div class="bar-col"><div class="bar" style="height:100%"></div><div class="bar green" style="height:78%"></div><div class="bar-label">Sun</div></div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>In Transit</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Completed</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="panel map-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Live Asset Map</div>
+            <div class="panel-sub">Real-time location pings</div>
+          </div>
+          <div class="panel-action">Full Map</div>
+        </div>
+        <div class="map-wrap">
+          <div class="map-grid"></div>
+
+          <div class="map-ping ping-blue"  style="left:22%;top:35%"><div class="ping-tooltip">VH-0041 · KL Sentral</div></div>
+          <div class="map-ping ping-green" style="left:55%;top:45%"><div class="ping-tooltip">VH-0092 · Chow Kit</div></div>
+          <div class="map-ping ping-amber" style="left:38%;top:62%"><div class="ping-tooltip">DR-1103 · Ampang</div></div>
+          <div class="map-ping ping-blue"  style="left:70%;top:28%"><div class="ping-tooltip">VH-0017 · Bukit Bintang</div></div>
+          <div class="map-ping ping-red"   style="left:48%;top:20%"><div class="ping-tooltip">DR-0880 · ALERT</div></div>
+          <div class="map-ping ping-green" style="left:82%;top:58%"><div class="ping-tooltip">VH-0063 · Pandan Jaya</div></div>
+          <div class="map-ping ping-amber" style="left:15%;top:70%"><div class="ping-tooltip">EQ-0221 · Petaling Jaya</div></div>
+          <div class="map-ping ping-blue"  style="left:60%;top:72%"><div class="ping-tooltip">EQ-0447 · Cyberjaya</div></div>
+        </div>
+        <div style="padding:12px 20px;display:flex;gap:16px">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Vehicle</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Delivered</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div>Idle</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div>Alert</div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bot-row">
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Asset Overview</div>
+            <div class="panel-sub">Recent active entries</div>
+          </div>
+          <div class="panel-action">View All</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Asset ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Last Ping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>VH-0041</td>
+                <td style="color:var(--text)">Delivery Van #1</td>
+                <td>Vehicle</td>
+                <td><span class="status-pill pill-transit">In Transit</span></td>
+                <td style="font-family:var(--mono);font-size:11px">2 min ago</td>
+              </tr>
+              <tr>
+                <td>EQ-0221</td>
+                <td style="color:var(--text)">Forklift Alpha</td>
+                <td>Equipment</td>
+                <td><span class="status-pill pill-idle">Idle</span></td>
+                <td style="font-family:var(--mono);font-size:11px">8 min ago</td>
+              </tr>
+              <tr>
+                <td>DR-0880</td>
+                <td style="color:var(--text)">Drone Unit 4</td>
+                <td>Drone</td>
+                <td><span class="status-pill pill-offline">Offline</span></td>
+                <td style="font-family:var(--mono);font-size:11px">34 min ago</td>
+              </tr>
+              <tr>
+                <td>VH-0092</td>
+                <td style="color:var(--text)">Cargo Truck B</td>
+                <td>Vehicle</td>
+                <td><span class="status-pill pill-active">Active</span></td>
+                <td style="font-family:var(--mono);font-size:11px">Just now</td>
+              </tr>
+              <tr>
+                <td>EQ-0447</td>
+                <td style="color:var(--text)">Pallet Jack 02</td>
+                <td>Equipment</td>
+                <td><span class="status-pill pill-active">Active</span></td>
+                <td style="font-family:var(--mono);font-size:11px">1 min ago</td>
+              </tr>
+              <tr>
+                <td>DR-1103</td>
+                <td style="color:var(--text)">Survey Drone 7</td>
+                <td>Drone</td>
+                <td><span class="status-pill pill-transit">In Transit</span></td>
+                <td style="font-family:var(--mono);font-size:11px">3 min ago</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Activity Feed</div>
+            <div class="panel-sub">System events & notifications</div>
+          </div>
+          <div class="panel-action">Clear All</div>
+        </div>
+        <div class="feed">
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent4)"></div>
+            <div class="feed-body">
+              <p>Alert triggered for <span>DR-0880</span> — signal lost in Zone B</p>
+              <div class="feed-time">09:41 — 16 Mar 2026</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent2)"></div>
+            <div class="feed-body">
+              <p><span>VH-0092</span> completed delivery to Warehouse #3</p>
+              <div class="feed-time">09:35 — 16 Mar 2026</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent3)"></div>
+            <div class="feed-body">
+              <p><span>EQ-0221</span> entered idle state — no movement for 15 min</p>
+              <div class="feed-time">09:28 — 16 Mar 2026</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent)"></div>
+            <div class="feed-body">
+              <p>New user <span>Izzat Farhan</span> registered with Viewer access</p>
+              <div class="feed-time">09:12 — 16 Mar 2026</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent2)"></div>
+            <div class="feed-body">
+              <p><span>DR-1103</span> departed depot — destination: Ampang Yard</p>
+              <div class="feed-time">09:05 — 16 Mar 2026</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-dot" style="background:var(--accent5)"></div>
+            <div class="feed-body">
+              <p>System backup completed — <span>4,821 records</span> archived</p>
+              <div class="feed-time">08:50 — 16 Mar 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>
