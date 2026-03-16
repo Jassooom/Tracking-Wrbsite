@@ -1,0 +1,6 @@
+type_id,type_name,icon_slug,created_at
+1,Vehicle,truck,2026-01-01 08:00:00
+2,Drone,drone,2026-01-01 08:00:00
+3,Equipment,wrench,2026-01-01 08:00:00
+4,Person,user,2026-01-01 08:00:00
+5,Container,package,2026-01-01 08:00:00

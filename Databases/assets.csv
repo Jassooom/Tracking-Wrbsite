@@ -1,0 +1,9 @@
+asset_id,type_id,asset_code,asset_name,description,manufacturer,model,serial_number,purchase_date,status,assigned_to,created_by,created_at,updated_at
+1,1,VH-0041,Delivery Van #1,Primary city delivery van,Toyota,Hiace,SN-VH0041-2024,2024-03-01,active,2,1,2024-03-01 08:00:00,2026-03-16 09:00:00
+2,1,VH-0092,Cargo Truck B,Heavy cargo transport,Isuzu,NPR,SN-VH0092-2023,2023-06-15,active,5,1,2023-06-15 08:00:00,2026-03-16 09:00:00
+3,1,VH-0017,Delivery Van #2,Secondary city delivery van,Toyota,Hiace,SN-VH0017-2024,2024-01-10,active,2,1,2024-01-10 08:00:00,2026-03-16 08:30:00
+4,2,DR-0880,Drone Unit 4,Aerial survey drone,DJI,Matrice 300,SN-DR0880-2025,2025-01-20,offline,,1,2025-01-20 08:00:00,2026-03-16 09:41:00
+5,2,DR-1103,Survey Drone 7,Long-range delivery drone,DJI,Agras T40,SN-DR1103-2025,2025-04-05,active,3,1,2025-04-05 08:00:00,2026-03-16 09:05:00
+6,3,EQ-0221,Forklift Alpha,Electric forklift for warehouse,Toyota,8FBE15,SN-EQ0221-2022,2022-09-01,idle,5,1,2022-09-01 08:00:00,2026-03-16 09:28:00
+7,3,EQ-0447,Pallet Jack 02,Manual hydraulic pallet jack,Crown,WP2300,SN-EQ0447-2023,2023-03-15,active,,1,2023-03-15 08:00:00,2026-03-16 09:00:00
+8,1,VH-0063,Express Van C,Last-mile delivery van,Nissan,NV200,SN-VH0063-2024,2024-07-20,active,2,1,2024-07-20 08:00:00,2026-03-16 08:00:00

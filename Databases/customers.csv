@@ -1,0 +1,7 @@
+customer_id,full_name,email,phone,address_line1,address_line2,city,state,postcode,country,created_at
+1,Razlan Mohd,razlan@email.com,+60111234567,No. 12 Jalan Utama,,Kuala Lumpur,Wilayah Persekutuan,50480,MY,2026-01-10 10:00:00
+2,Farah Izzati,farah.iz@email.com,+60122345678,Unit 3A Jalan Damai,Taman Sri Muda,Shah Alam,Selangor,40150,MY,2026-01-12 11:00:00
+3,Teknologi Maju Sdn Bhd,info@teknomauju.com.my,+60334455667,Lot 22 Jalan Industri,Kawasan Perindustrian,Petaling Jaya,Selangor,47810,MY,2026-01-20 09:00:00
+4,Chin Wei Liang,cwliang@email.com,+60133456789,Blok B-15 Pangsapuri Bayu,,Ampang,Selangor,68000,MY,2026-02-01 14:00:00
+5,Priya Krishnan,priya.k@email.com,+60144567890,No. 88 Jalan Cheras,,Kuala Lumpur,Wilayah Persekutuan,56100,MY,2026-02-14 16:00:00
+6,Global Logistics Bhd,ops@globallogistics.my,+60355566778,Level 5 Menara Logistik,Jalan Semantan,Kuala Lumpur,Wilayah Persekutuan,50490,MY,2026-02-20 08:00:00

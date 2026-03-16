@@ -1,0 +1,5 @@
+role_id,role_name,description,created_at
+1,Administrator,"Full access — manage users, assets, system settings",2026-03-16 08:00:00
+2,Operator,"Create and manage deliveries, view all tracking data",2026-03-16 08:00:00
+3,Dispatcher,"Assign deliveries and monitor live map",2026-03-16 08:00:00
+4,Viewer,"Read-only access to dashboard and reports",2026-03-16 08:00:00

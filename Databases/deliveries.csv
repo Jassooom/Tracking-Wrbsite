@@ -1,0 +1,7 @@
+delivery_id,delivery_ref,customer_id,asset_id,assigned_to,origin_zone_id,dest_address,dest_latitude,dest_longitude,status,scheduled_at,picked_up_at,delivered_at,notes,created_by,created_at,updated_at
+1,DLV-20260316-0001,1,1,2,1,"No. 12 Jalan Utama, KL 50480",3.1420000,101.6940000,in_transit,2026-03-16 08:00:00,2026-03-16 08:30:00,,Priority delivery,1,2026-03-16 07:00:00,2026-03-16 09:40:00
+2,DLV-20260316-0002,2,8,2,1,"Unit 3A Jalan Damai, Shah Alam 40150",3.1700000,101.6983000,delivered,2026-03-16 07:30:00,2026-03-16 07:55:00,2026-03-16 09:35:00,,1,2026-03-16 07:00:00,2026-03-16 09:35:00
+3,DLV-20260316-0003,3,5,3,3,"Lot 22 Jalan Industri, PJ 47810",3.1483000,101.7500000,in_transit,2026-03-16 09:00:00,2026-03-16 09:05:00,,Fragile items,1,2026-03-16 08:30:00,2026-03-16 09:05:00
+4,DLV-20260316-0004,4,3,2,1,"Blok B-15 Ampang 68000",3.1579000,101.7116000,in_transit,2026-03-16 09:30:00,2026-03-16 09:28:00,,Standard delivery,1,2026-03-16 09:00:00,2026-03-16 09:28:00
+5,DLV-20260316-0005,5,2,5,7,"No. 88 Jalan Cheras, KL 56100",3.1000000,101.7300000,pending,2026-03-16 11:00:00,,,Large package,1,2026-03-16 09:00:00,2026-03-16 09:00:00
+6,DLV-20260315-0042,6,1,2,1,"Level 5 Menara Logistik, KL 50490",3.1579000,101.6866000,delivered,2026-03-15 14:00:00,2026-03-15 14:20:00,2026-03-15 16:45:00,,1,2026-03-15 13:00:00,2026-03-15 16:45:00

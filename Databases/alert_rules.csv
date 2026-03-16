@@ -1,0 +1,7 @@
+rule_id,rule_name,alert_type,asset_type_id,threshold,zone_id,severity,is_active,created_by,created_at
+1,Speed Limit Exceeded,speed_exceeded,1,90.00,,warning,1,1,2026-01-01 08:00:00
+2,Drone Offline,offline,2,,, critical,1,1,2026-01-01 08:00:00
+3,Restricted Zone Entry,geofence_entry,,, 5,critical,1,1,2026-01-01 08:00:00
+4,Low Battery Warning,low_battery,,20.00,,warning,1,1,2026-01-01 08:00:00
+5,Vehicle Left Depot,geofence_exit,1,,1,info,1,1,2026-01-01 08:00:00
+6,Route Deviation,route_deviation,1,500.00,,warning,1,1,2026-01-01 08:00:00

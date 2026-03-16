@@ -1,0 +1,9 @@
+audit_id,user_id,action,entity_type,entity_id,old_value,new_value,ip_address,occurred_at
+1,1,ASSET_CREATED,asset,4,,"{""asset_code"":""DR-0880"",""status"":""idle""}",192.168.1.10,2025-01-20 08:10:00
+2,1,DELIVERY_CREATED,delivery,1,,"{""delivery_ref"":""DLV-20260316-0001"",""status"":""pending""}",192.168.1.10,2026-03-16 07:00:00
+3,2,DELIVERY_STATUS_CHANGED,delivery,2,"{""status"":""in_transit""}","{""status"":""delivered""}",192.168.1.11,2026-03-16 09:35:00
+4,1,ALERT_RESOLVED,alert,4,"{""is_resolved"":0}","{""is_resolved"":1,""resolved_by"":1}",192.168.1.10,2026-03-16 08:45:00
+5,1,USER_CREATED,user,3,,"{""email"":""dispatcher1@trackcore.my"",""role_id"":3}",192.168.1.10,2026-02-01 08:05:00
+6,3,DELIVERY_STATUS_CHANGED,delivery,3,"{""status"":""assigned""}","{""status"":""in_transit""}",192.168.1.12,2026-03-16 09:05:00
+7,1,ASSET_STATUS_CHANGED,asset,4,"{""status"":""active""}","{""status"":""offline""}",192.168.1.10,2026-03-16 09:42:00
+8,1,REPORT_GENERATED,report,3,,"{""report_name"":""Alert Log March 2026""}",192.168.1.10,2026-03-16 08:00:00

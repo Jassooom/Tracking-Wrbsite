@@ -1,0 +1,5 @@
+report_id,report_name,report_type,parameters,generated_by,file_path,generated_at
+1,Daily Delivery Summary 15 Mar 2026,delivery_summary,"{""date"":""2026-03-15"",""status"":""all""}",1,/reports/delivery_summary_20260315.pdf,2026-03-15 23:00:00
+2,Asset Activity Week 10,asset_activity,"{""week"":10,""year"":2026}",1,/reports/asset_activity_w10_2026.pdf,2026-03-15 23:05:00
+3,Alert Log March 2026,alert_log,"{""month"":3,""year"":2026,""severity"":""all""}",1,/reports/alert_log_mar2026.csv,2026-03-16 08:00:00
+4,Route History VH-0041,route_history,"{""asset_code"":""VH-0041"",""from"":""2026-03-10"",""to"":""2026-03-16""}",2,/reports/route_vh0041_20260310_20260316.pdf,2026-03-16 08:30:00

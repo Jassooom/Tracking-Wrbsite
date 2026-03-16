@@ -1,0 +1,13 @@
+history_id,delivery_id,old_status,new_status,changed_by,note,changed_at
+1,1,pending,assigned,1,Assigned to Delivery Van #1,2026-03-16 07:10:00
+2,1,assigned,in_transit,2,Vehicle departed KL Sentral Depot,2026-03-16 08:30:00
+3,2,pending,assigned,1,Assigned to Express Van C,2026-03-16 07:05:00
+4,2,assigned,in_transit,2,Vehicle departed KL Sentral Depot,2026-03-16 07:55:00
+5,2,in_transit,delivered,2,Package delivered successfully,2026-03-16 09:35:00
+6,3,pending,assigned,1,Assigned to Survey Drone 7,2026-03-16 08:40:00
+7,3,assigned,in_transit,3,Drone departed Cyberjaya Hub,2026-03-16 09:05:00
+8,4,pending,assigned,1,Assigned to Delivery Van #2,2026-03-16 09:15:00
+9,4,assigned,in_transit,2,Vehicle en route to Ampang,2026-03-16 09:28:00
+10,6,pending,assigned,1,Assigned to Delivery Van #1,2026-03-15 13:10:00
+11,6,assigned,in_transit,2,Vehicle departed,2026-03-15 14:20:00
+12,6,in_transit,delivered,2,Delivered to recipient,2026-03-15 16:45:00
