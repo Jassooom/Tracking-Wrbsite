@@ -64,4 +64,6 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = { router, auth };
+// Export router as default export and auth middleware as a property so it can be imported in other routes
+module.exports = router;
+module.exports.auth = auth;

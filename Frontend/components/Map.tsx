@@ -4,12 +4,27 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || 'your-mapbox-token'
 
-export default function Map({ vehicles, selectedVehicle }) {
-  const mapContainer = useRef(null)
-  const map = useRef(null)
+type Vehicle = {
+  _id: string
+  name: string
+  lastLocation?: {
+    lat: number
+    lng: number
+    timestamp: string
+  }
+}
+
+type MapProps = {
+  vehicles: Vehicle[]
+  selectedVehicle: Vehicle | null
+}
+
+export default function Map({ vehicles, selectedVehicle }: MapProps) {
+  const mapContainer = useRef<HTMLDivElement>(null)
+  const map = useRef<mapboxgl.Map | null>(null)
 
   useEffect(() => {
-    if (map.current) return // initialize map only once
+    if (map.current || !mapContainer.current) return // initialize map only once
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -20,7 +35,7 @@ export default function Map({ vehicles, selectedVehicle }) {
 
     // Add markers for vehicles
     vehicles.forEach(vehicle => {
-      if (vehicle.lastLocation) {
+      if (vehicle.lastLocation && map.current) {
         new mapboxgl.Marker()
           .setLngLat([vehicle.lastLocation.lng, vehicle.lastLocation.lat])
           .setPopup(new mapboxgl.Popup().setHTML(`<h3>${vehicle.name}</h3>`))

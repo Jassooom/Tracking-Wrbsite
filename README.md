@@ -1,16 +1,14 @@
-# Vehicle Tracking Web Application
+# Vehicle Tracking System
 
-A comprehensive real-time vehicle tracking system with web interface and mobile app scalability.
+A full-stack web application for real-time vehicle tracking with dashboard visualization.
 
 ## Features
 
-- Real-time GPS location monitoring
-- Interactive map interface with Mapbox
-- Automated alert system for geofencing, speed violations, etc.
-- Responsive web design with PWA capabilities
-- User authentication and authorization
-- RESTful API with GraphQL support
-- Real-time communication via WebSockets
+- **Real-time Tracking**: Live vehicle location updates via WebSocket
+- **Interactive Map**: Mapbox-powered map with vehicle markers
+- **Alert System**: Real-time alerts for vehicle events
+- **User Authentication**: Secure login and registration
+- **Responsive Design**: Modern UI built with Next.js and Tailwind CSS
 
 ## Tech Stack
 
@@ -19,35 +17,173 @@ A comprehensive real-time vehicle tracking system with web interface and mobile 
 - MongoDB with Mongoose
 - Socket.io for real-time communication
 - JWT for authentication
-- bcrypt for password hashing
+- bcryptjs for password hashing
 
 ### Frontend
-- Next.js with React
-- TypeScript
+- Next.js 14 with TypeScript
+- React with hooks
+- Socket.io client
+- Mapbox GL JS for mapping
 - Tailwind CSS for styling
-- Mapbox GL JS for maps
-- Socket.io client for real-time updates
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB
-- Mapbox account and access token
+- Node.js (v18 or higher)
+- MongoDB (local or cloud instance)
+- Mapbox account (for map functionality)
 
-### Installation
+## Installation
 
-1. Clone the repository
-2. Install backend dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Tracking-Wrbsite
+   ```
+
+2. **Backend Setup**
    ```bash
    cd Backend
    npm install
+   cp .env.example .env  # Configure your environment variables
+   npm run dev  # For development
+   # or
+   npm start  # For production
    ```
-3. Install frontend dependencies:
+
+3. **Frontend Setup**
    ```bash
-   cd Frontend
+   cd ../Frontend
    npm install
+   cp .env.local.example .env.local  # Configure your environment variables
+   npm run dev  # For development
+   # or
+   npm run build && npm start  # For production
    ```
+
+## Environment Variables
+
+### Backend (.env)
+```
+MONGODB_URI=mongodb://localhost:27017/vehicle-tracking
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+PORT=5000
+FRONTEND_URL=http://localhost:3000
+```
+
+### Frontend (.env.local)
+```
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your-mapbox-access-token
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+
+### Vehicles
+- `GET /api/vehicles` - Get user's vehicles
+- `POST /api/vehicles` - Create new vehicle
+- `PUT /api/vehicles/:id` - Update vehicle
+- `DELETE /api/vehicles/:id` - Delete vehicle
+
+### Locations
+- `GET /api/locations/vehicle/:vehicleId` - Get vehicle locations
+- `POST /api/locations` - Add new location (device endpoint)
+
+### Alerts
+- `GET /api/alerts` - Get user's alerts
+- `POST /api/alerts` - Create alert
+
+## Real-time Events
+
+The application uses Socket.io for real-time updates:
+
+- `location-update`: Vehicle location changes
+- `alert`: New alerts
+
+## Development
+
+### Running in Development Mode
+
+1. Start MongoDB
+2. Start backend: `cd Backend && npm run dev`
+3. Start frontend: `cd Frontend && npm run dev`
+4. Open http://localhost:3000
+
+### Building for Production
+
+```bash
+# Backend
+cd Backend
+npm run build  # If using build script
+npm start
+
+# Frontend
+cd Frontend
+npm run build
+npm start
+```
+
+## Database Schema
+
+### User
+- name: String
+- email: String (unique)
+- password: String (hashed)
+- role: String (default: 'user')
+
+### Vehicle
+- name: String
+- licensePlate: String (unique)
+- deviceId: String (unique)
+- owner: ObjectId (ref: User)
+- status: String
+- lastLocation: Object
+
+### Location
+- vehicleId: ObjectId (ref: Vehicle)
+- lat: Number
+- lng: Number
+- speed: Number
+- heading: Number
+- accuracy: Number
+- timestamp: Date
+
+### Alert
+- vehicleId: ObjectId (ref: Vehicle)
+- type: String
+- message: String
+- severity: String
+- location: Object
+- status: String
+- timestamp: Date
+
+## Deployment
+
+### Backend Deployment
+- Use PM2 or similar process manager
+- Set environment variables
+- Ensure MongoDB connection
+- Configure CORS for frontend domain
+
+### Frontend Deployment
+- Build the application: `npm run build`
+- Serve static files or use Vercel/Netlify
+- Configure environment variables
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
 
 4. Set up environment variables:
    - Copy `.env` files and update with your values

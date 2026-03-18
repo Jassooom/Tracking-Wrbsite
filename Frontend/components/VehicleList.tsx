@@ -1,4 +1,15 @@
-export default function VehicleList({ vehicles, selectedVehicle, onSelectVehicle }) {
+type Vehicle = {
+  _id: string
+  name: string
+  licensePlate: string
+  status: string
+}
+
+export default function VehicleList({ vehicles, selectedVehicle, onSelectVehicle }: {
+  vehicles: Vehicle[]
+  selectedVehicle: Vehicle | null
+  onSelectVehicle: (vehicle: Vehicle) => void
+}) {
   return (
     <div className="mb-4">
       <h2 className="text-lg font-semibold mb-2">Vehicles</h2>

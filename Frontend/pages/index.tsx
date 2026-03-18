@@ -1,17 +1,46 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import io from 'socket.io-client'
 import Map from '../components/Map'
 import VehicleList from '../components/VehicleList'
 import AlertPanel from '../components/AlertPanel'
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'
+
+type Vehicle = {
+  _id: string
+  name: string
+  licensePlate: string
+  status: string
+  lastLocation?: {
+    lat: number
+    lng: number
+    timestamp: string
+  }
+}
+
+type Alert = {
+  _id: string
+  type: string
+  message: string
+  timestamp: string
+}
+
 export default function Home() {
-  const [vehicles, setVehicles] = useState([])
-  const [alerts, setAlerts] = useState([])
-  const [selectedVehicle, setSelectedVehicle] = useState(null)
+  const router = useRouter()
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null)
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.replace('/login')
+      return
+    }
+
     // Connect to socket.io
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000')
+    const socket = io(BACKEND_URL)
 
     socket.on('location-update', (data) => {
       setVehicles(prev => prev.map(vehicle => 
@@ -27,14 +56,16 @@ export default function Home() {
     fetchVehicles()
     fetchAlerts()
 
-    return () => socket.disconnect()
-  }, [])
+    return () => {
+      socket.disconnect()
+    }
+  }, [router]) // Added router to dependencies
 
   const fetchVehicles = async () => {
     const token = localStorage.getItem('token')
     if (!token) return
 
-    const res = await fetch('/api/vehicles', {
+    const res = await fetch(`${BACKEND_URL}/api/vehicles`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     const data = await res.json()
@@ -45,7 +76,7 @@ export default function Home() {
     const token = localStorage.getItem('token')
     if (!token) return
 
-    const res = await fetch('/api/alerts', {
+    const res = await fetch(`${BACKEND_URL}/api/alerts`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     const data = await res.json()

@@ -1,4 +1,11 @@
-export default function AlertPanel({ alerts }) {
+type Alert = {
+  _id: string
+  type: string
+  message: string
+  timestamp: string
+}
+
+export default function AlertPanel({ alerts }: { alerts: Alert[] }) {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-2">Active Alerts</h2>
