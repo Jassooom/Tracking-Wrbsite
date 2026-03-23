@@ -2,16 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0c0f14; --bg2: #111620; --bg3: #161c28; --panel: #1a2133;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --text: #e8edf5; --text2: #8892a4; --text3: #525f75;
+  --accent: #3b82f6; --accent-glow: rgba(59,130,246,0.15);
+  --accent2: #10b981; --accent3: #f59e0b; --accent4: #ef4444; --accent5: #8b5cf6;
+  --font: 'DM Sans', sans-serif; --mono: 'Space Mono', monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+body { font-family: var(--font); background: var(--bg); color: var(--text); }
+
+/* Leaflet dark override */
+.leaflet-container { background: #0c0f14 !important; }
+.leaflet-tile { filter: brightness(0.7) saturate(0.6) hue-rotate(180deg); }
+.leaflet-popup-content-wrapper { background: #1a2133; color: #e8edf5; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; }
+.leaflet-popup-tip { background: #1a2133; }
+.leaflet-control-zoom a { background: #1a2133 !important; color: #e8edf5 !important; border-color: rgba(255,255,255,0.1) !important; }
+.leaflet-control-attribution { background: rgba(17,22,32,0.8) !important; color: #525f75 !important; }

@@ -1,5 +1,5 @@
 user_id,role_id,full_name,email,password_hash,phone,is_active,last_login,created_at,updated_at
-1,1,Ahmad Razif,admin@trackcore.my,$2b$12$adminHashExample001,+60123456789,1,2026-03-16 09:00:00,2026-01-01 08:00:00,2026-03-16 09:00:00
+1,1,Ahmad Razif,admin@trackcore.my,$2b$12$adminHashExample001,+60123456789,1,2026-03-23T18:22:06.317Z,2026-01-01 08:00:00,2026-03-23T18:22:06.317Z
 2,2,Siti Nuraini,operator1@trackcore.my,$2b$12$operatorHash002,+60134567890,1,2026-03-16 08:45:00,2026-01-15 08:00:00,2026-03-16 08:45:00
 3,3,Izzat Farhan,dispatcher1@trackcore.my,$2b$12$dispatcherHash003,+60145678901,1,2026-03-16 09:12:00,2026-02-01 08:00:00,2026-03-16 09:12:00
 4,4,Nurul Hidayah,viewer1@trackcore.my,$2b$12$viewerHash004,+60156789012,1,2026-03-15 14:00:00,2026-02-10 08:00:00,2026-03-15 14:00:00

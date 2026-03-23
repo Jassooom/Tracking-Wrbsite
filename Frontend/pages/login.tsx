@@ -1,116 +1,81 @@
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'
+const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [isRegister, setIsRegister] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail]       = useState('admin@trackcore.my')
+  const [password, setPassword] = useState('admin123')
+  const [name, setName]         = useState('')
+  const [isReg, setIsReg]       = useState(false)
+  const [loading, setLoading]   = useState(false)
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setError(null)
-    setLoading(true)
-
-    const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login'
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setLoading(true)
+    const endpoint = isReg ? '/api/auth/register' : '/api/auth/login'
     const body: any = { email, password }
-    if (isRegister) body.name = name
-
+    if (isReg) body.name = name
     try {
-      const res = await fetch(`${BACKEND_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-
+      const res  = await fetch(`${BACKEND}${endpoint}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       const data = await res.json()
-      if (!res.ok) {
-        setError(data?.message || 'Authentication failed')
-        return
-      }
-
+      if (!res.ok) { toast.error(data.message || 'Failed'); return }
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
       router.replace('/')
-    } catch (err) {
-      console.error(err)
-      setError('Unable to connect to server')
-    } finally {
-      setLoading(false)
-    }
+    } catch { toast.error('Cannot connect to server') }
+    finally { setLoading(false) }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white p-8 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">{isRegister ? 'Register' : 'Login'}</h1>
-        {error && <div className="mb-4 text-sm text-red-700 bg-red-100 p-3 rounded">{error}</div>}
+    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'var(--bg)', fontFamily:'var(--font)' }}>
+      <div style={{ width:420, background:'var(--panel)', border:'1px solid var(--border)', borderRadius:16, padding:40 }}>
+        {/* Logo */}
+        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:32 }}>
+          <div style={{ width:40, height:40, background:'var(--accent)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <svg viewBox="0 0 24 24" style={{ width:22, height:22, fill:'white' }}><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <div style={{ fontSize:20, fontWeight:600, color:'var(--text)' }}>Track<span style={{ color:'var(--accent)' }}>Core</span></div>
+            <div style={{ fontSize:12, color:'var(--text3)' }}>Tracking Management System</div>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {isRegister && (
+        <h2 style={{ fontSize:18, fontWeight:500, marginBottom:24, color:'var(--text)' }}>{isReg ? 'Create account' : 'Sign in to continue'}</h2>
+
+        <form onSubmit={submit} style={{ display:'flex', flexDirection:'column', gap:16 }}>
+          {isReg && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                className="mt-1 w-full p-2 border rounded"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+              <label style={{ fontSize:12, color:'var(--text3)', display:'block', marginBottom:6 }}>Full name</label>
+              <input value={name} onChange={e => setName(e.target.value)} required
+                style={{ width:'100%', padding:'10px 12px', background:'var(--bg3)', border:'1px solid var(--border)', borderRadius:8, color:'var(--text)', fontSize:14, outline:'none' }} />
             </div>
           )}
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              className="mt-1 w-full p-2 border rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <label style={{ fontSize:12, color:'var(--text3)', display:'block', marginBottom:6 }}>Email address</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+              style={{ width:'100%', padding:'10px 12px', background:'var(--bg3)', border:'1px solid var(--border)', borderRadius:8, color:'var(--text)', fontSize:14, outline:'none' }} />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              className="mt-1 w-full p-2 border rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <label style={{ fontSize:12, color:'var(--text3)', display:'block', marginBottom:6 }}>Password</label>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
+              style={{ width:'100%', padding:'10px 12px', background:'var(--bg3)', border:'1px solid var(--border)', borderRadius:8, color:'var(--text)', fontSize:14, outline:'none' }} />
           </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-            disabled={loading}
-          >
-            {loading ? 'Please wait…' : isRegister ? 'Register' : 'Login'}
+          <button type="submit" disabled={loading}
+            style={{ marginTop:8, padding:'12px', background:'var(--accent)', border:'none', borderRadius:8, color:'white', fontSize:14, fontWeight:500, cursor:'pointer', opacity: loading ? 0.7 : 1 }}>
+            {loading ? 'Please wait…' : isReg ? 'Create account' : 'Sign in'}
           </button>
         </form>
 
-        <div className="mt-4 text-sm text-center text-gray-600">
-          {isRegister ? (
-            <>
-              Already have an account?{' '}
-              <button className="text-blue-600 underline" onClick={() => setIsRegister(false)}>
-                Login
-              </button>
-            </>
-          ) : (
-            <>
-              Need an account?{' '}
-              <button className="text-blue-600 underline" onClick={() => setIsRegister(true)}>
-                Register
-              </button>
-            </>
-          )}
+        <div style={{ marginTop:20, fontSize:13, color:'var(--text3)', textAlign:'center' }}>
+          {isReg ? <>Already have an account?{' '}<button onClick={() => setIsReg(false)} style={{ color:'var(--accent)', background:'none', border:'none', cursor:'pointer' }}>Sign in</button></>
+                 : <>New user?{' '}<button onClick={() => setIsReg(true)} style={{ color:'var(--accent)', background:'none', border:'none', cursor:'pointer' }}>Create account</button></>}
+        </div>
+
+        <div style={{ marginTop:24, padding:'12px 14px', background:'rgba(59,130,246,0.08)', borderRadius:8, border:'1px solid rgba(59,130,246,0.2)', fontSize:12, color:'var(--text2)' }}>
+          <strong style={{ color:'var(--accent)' }}>Demo credentials:</strong><br />
+          Email: admin@trackcore.my &nbsp;·&nbsp; Password: admin123
         </div>
       </div>
     </div>

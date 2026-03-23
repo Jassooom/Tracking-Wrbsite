@@ -1,77 +1,58 @@
 const express = require('express');
-const Vehicle = require('../models/Vehicle');
+const { readTable, insertRow, updateRow } = require('../utils/csvDb');
 const { auth } = require('./auth');
 
 const router = express.Router();
 
-// Get all vehicles for user
-router.get('/', auth, async (req, res) => {
+router.get('/', auth, (req, res) => {
   try {
-    const vehicles = await Vehicle.find({ owner: req.userId }).populate('owner', 'name email');
+    const assets = readTable('assets');
+    const lastLocs = readTable('asset_last_location');
+    const types = readTable('asset_types');
+
+    const vehicles = assets.map(a => {
+      const loc = lastLocs.find(l => String(l.asset_id) === String(a.asset_id));
+      const type = types.find(t => String(t.type_id) === String(a.type_id));
+      return {
+        _id: a.asset_id,
+        name: a.asset_name,
+        licensePlate: a.asset_code,
+        status: a.status,
+        type: type?.type_name || 'Unknown',
+        lastLocation: loc ? { lat: parseFloat(loc.latitude), lng: parseFloat(loc.longitude), speed: parseFloat(loc.speed_kmh || 0), timestamp: loc.last_ping } : null
+      };
+    });
     res.json(vehicles);
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Get vehicle by ID
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, (req, res) => {
+  const assets = readTable('assets');
+  const asset = assets.find(a => String(a.asset_id) === String(req.params.id));
+  if (!asset) return res.status(404).json({ message: 'Not found' });
+  res.json(asset);
+});
+
+router.post('/', auth, (req, res) => {
   try {
-    const vehicle = await Vehicle.findOne({ _id: req.params.id, owner: req.userId });
-    if (!vehicle) {
-      return res.status(404).json({ message: 'Vehicle not found' });
-    }
-    res.json(vehicle);
-  } catch (error) {
+    const { name, licensePlate, type } = req.body;
+    const typeRow = readTable('asset_types').find(t => t.type_name.toLowerCase() === (type||'vehicle').toLowerCase());
+    const newAsset = insertRow('assets', 'asset_id', {
+      type_id: typeRow?.type_id || 1, asset_code: licensePlate, asset_name: name,
+      status: 'idle', created_by: req.userId
+    });
+    res.status(201).json(newAsset);
+  } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Create vehicle
-router.post('/', auth, async (req, res) => {
-  try {
-    const { name, licensePlate, deviceId } = req.body;
-    const vehicle = new Vehicle({ name, licensePlate, deviceId, owner: req.userId });
-    await vehicle.save();
-    res.status(201).json(vehicle);
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(400).json({ message: 'License plate or device ID already exists' });
-    } else {
-      res.status(500).json({ message: 'Server error' });
-    }
-  }
-});
-
-// Update vehicle
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const { name, licensePlate, status, deviceId } = req.body;
-    const vehicle = await Vehicle.findOneAndUpdate(
-      { _id: req.params.id, owner: req.userId },
-      { name, licensePlate, status, deviceId },
-      { new: true }
-    );
-    if (!vehicle) {
-      return res.status(404).json({ message: 'Vehicle not found' });
-    }
-    res.json(vehicle);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Delete vehicle
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    const vehicle = await Vehicle.findOneAndDelete({ _id: req.params.id, owner: req.userId });
-    if (!vehicle) {
-      return res.status(404).json({ message: 'Vehicle not found' });
-    }
-    res.json({ message: 'Vehicle deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
+router.put('/:id', auth, (req, res) => {
+  const updated = updateRow('assets', 'asset_id', req.params.id, req.body);
+  if (!updated) return res.status(404).json({ message: 'Not found' });
+  res.json(updated);
 });
 
 module.exports = router;
